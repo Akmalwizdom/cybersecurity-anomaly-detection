@@ -42,7 +42,7 @@ print("="*70)
 # =============================================================================
 print("\n[1/5] Loading data...")
 
-CSV_FILE = 'cybersecurity_attacks.csv'
+CSV_FILE = 'dataset/cybersecurity_attacks.csv'
 if not os.path.exists(CSV_FILE):
     print(f"❌ Error: File '{CSV_FILE}' not found!")
     sys.exit(1)
@@ -297,7 +297,6 @@ top_features = sorted(feature_variances.keys(), key=lambda x: feature_variances[
 
 print(f"  - Using features: {top_features}")
 
-# FIXED: Normalize the ENTIRE dataset first, then calculate cluster means
 # This preserves the relative differences between clusters
 df_normalized = df.copy()
 minmax_scaler = MinMaxScaler()

@@ -31,7 +31,7 @@ print("\n" + "="*70)
 print(" STEP 1: DATA LOADING")
 print("="*70)
 
-df = pd.read_csv('cybersecurity_attacks.csv')
+df = pd.read_csv('dataset/cybersecurity_attacks.csv')
 print(f"✓ Dataset loaded: {df.shape[0]:,} records")
 
 # =============================================================================
