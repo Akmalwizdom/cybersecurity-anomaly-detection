@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threat Intelligence Dashboard | Cybersecurity Anomaly Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="grid-bg text-gray-300">
+    <!-- Scan line effect -->
+    <div class="scan-line"></div>
+
+    <!-- Header -->
+    <header class="border-b border-gray-800 bg-black/50 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div
+                        class="w-10 h-10 rounded-lg bg-white/5 border border-gray-700 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-white text-xl font-semibold tracking-tight">THREAT INTELLIGENCE</h1>
+                        <p class="text-gray-500 text-xs tracking-widest uppercase">Sistem Deteksi Anomali v1.0</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 rounded-full bg-green-500 pulse"></div>
+                        <span class="text-xs text-gray-400">SISTEM AKTIF</span>
+                    </div>
+                    <div class="text-xs text-gray-500" id="timestamp"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- Input Panel -->
+            <div class="glow-border rounded-xl bg-black/50 backdrop-blur-sm p-6">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-8 h-8 rounded-lg bg-white/5 border border-gray-700 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-white font-medium">ANALISIS TRAFIK JARINGAN</h2>
+                </div>
+
+                <form id="analyzeForm" class="space-y-5">
+                    <!-- Anomaly Score Input -->
+                    <div class="relative group">
+                        <label class="flex items-center text-xs text-gray-400 uppercase tracking-wider mb-2">
+                            Skor Anomali
+                            <span class="ml-2 text-gray-600 cursor-help tool-tip"
+                                data-tip="Tingkat ketidakwajaran data (0-100). Semakin tinggi semakin mencurigakan.">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </span>
+                        </label>
+                        <input type="number" id="anomaly_scores" name="anomaly_scores" min="0" max="100" step="0.01"
+                            placeholder="Contoh: 75.5"
+                            class="w-full bg-transparent border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-600 input-glow transition-all"
+                            required>
+                    </div>
+
+                    <!-- Packet Length Input -->
+                    <div class="relative group">
+                        <label class="flex items-center text-xs text-gray-400 uppercase tracking-wider mb-2">
+                            Ukuran Paket
+                            <span class="ml-2 text-gray-600 cursor-help tool-tip"
+                                data-tip="Besar data yang dikirim dalam satu paket (Satuan: bytes).">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </span>
+                        </label>
+                        <input type="number" id="packet_length" name="packet_length" min="0" placeholder="Contoh: 1500"
+                            class="w-full bg-transparent border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-600 input-glow transition-all"
+                            required>
+                    </div>
+
+                    <!-- Protocol Select -->
+                    <div>
+                        <label class="flex items-center text-xs text-gray-400 uppercase tracking-wider mb-2">
+                            Protokol
+                            <span class="ml-2 text-gray-600 cursor-help tool-tip"
+                                data-tip="Metode pengiriman data yang digunakan di jaringan.">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </span>
+                        </label>
+                        <select id="protocol" name="protocol"
+                            class="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white input-glow transition-all cursor-pointer"
+                            required>
+                            <option value="" disabled selected>Pilih protokol...</option>
+                            <option value="TCP">TCP</option>
+                            <option value="UDP">UDP</option>
+                            <option value="ICMP">ICMP</option>
+                        </select>
+                    </div>
+
+                    <!-- Network Segment Select -->
+                    <div>
+                        <label class="flex items-center text-xs text-gray-400 uppercase tracking-wider mb-2">
+                            Segmen Jaringan
+                            <span class="ml-2 text-gray-600 cursor-help tool-tip"
+                                data-tip="Wilayah bagian dalam infrastruktur jaringan komputer.">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </span>
+                        </label>
+                        <select id="network_segment" name="network_segment"
+                            class="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white input-glow transition-all cursor-pointer"
+                            required>
+                            <option value="" disabled selected>Pilih segmen...</option>
+                            <option value="Segment A">Segmen A</option>
+                            <option value="Segment B">Segmen B</option>
+                            <option value="Segment C">Segmen C</option>
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submitBtn"
+                        class="w-full bg-white/10 hover:bg-white/20 border border-gray-600 hover:border-gray-500 text-white font-medium py-4 px-6 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2 mt-6">
+                        <span id="btnText">MULAI ANALISIS</span>
+                        <div id="btnLoader" class="loading-spinner hidden"></div>
+                    </button>
+                </form>
+
+                <!-- Console Log -->
+                <div class="mt-6 p-4 bg-black/50 border border-gray-800 rounded-lg">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <span class="text-gray-600 text-xs">$</span>
+                        <span class="text-gray-500 text-xs">system_log</span>
+                    </div>
+                    <div id="consoleLog" class="console-text h-20 overflow-y-auto">
+                        <p>> System initialized</p>
+                        <p>> Ready for analysis</p>
+                        <p>> Awaiting input...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="glow-border rounded-xl bg-black/50 backdrop-blur-sm p-6">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-8 h-8 rounded-lg bg-white/5 border border-gray-700 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-white font-medium">HASIL ANALISIS</h2>
+                </div>
+
+                <!-- Placeholder when no results -->
+                <div id="noResults" class="text-center py-12">
+                    <div
+                        class="w-16 h-16 mx-auto mb-4 rounded-full bg-white/5 border border-gray-700 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        </svg>
+                    </div>
+                    <p class="text-gray-400 text-sm font-medium">Belum Ada Analisis</p>
+                    <p class="text-gray-600 text-xs mt-2 px-8">Masukkan data trafik jaringan di panel kiri, lalu klik
+                        tombol analisis untuk melihat tingkat risiko keamanan.</p>
+
+                    <div class="mt-8 pt-8 border-t border-gray-800 text-left">
+                        <h3 class="text-gray-500 text-xs uppercase tracking-widest mb-4">Panduan Singkat:</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start space-x-3 text-xs text-gray-500">
+                                <span class="text-green-500 mt-0.5">●</span>
+                                <span>Gunakan **Anomaly Score** tinggi (>70) untuk menguji deteksi serangan.</span>
+                            </li>
+                            <li class="flex items-start space-x-3 text-xs text-gray-500">
+                                <span class="text-blue-500 mt-0.5">●</span>
+                                <span>**Packet Length** biasanya berkisar antara 64 hingga 1500 bytes.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Results Container -->
+                <div id="resultsContainer" class="hidden space-y-6">
+                    <!-- Cluster ID Card -->
+                    <div id="clusterCard" class="border rounded-xl p-6 text-center transition-all duration-300">
+                        <div class="text-gray-400 text-xs uppercase tracking-widest mb-2">Detected Cluster</div>
+                        <div id="clusterID" class="text-6xl font-bold text-white mb-2">-</div>
+                        <div id="riskLabel" class="text-lg font-medium">-</div>
+                    </div>
+
+                    <!-- Risk Level Indicator -->
+                    <div class="border border-gray-800 rounded-xl p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs text-gray-400 uppercase tracking-wider">Tingkat Risiko</span>
+                            <span id="riskBadge" class="text-xs px-2 py-1 rounded-full border">-</span>
+                        </div>
+                        <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                            <div id="riskBar" class="h-full rounded-full status-bar"
+                                style="--bar-width: 0%; width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="border border-gray-800 rounded-xl p-4">
+                        <div class="text-xs text-gray-400 uppercase tracking-wider mb-2">Penilaian Ancaman</div>
+                        <p id="description" class="text-gray-300 text-sm leading-relaxed">-</p>
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="border border-gray-800 rounded-lg p-4">
+                            <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Jarak ke Pusat (Centroid)
+                            </div>
+                            <div id="distanceValue" class="text-xl text-white font-medium">-</div>
+                        </div>
+                        <div class="border border-gray-800 rounded-lg p-4">
+                            <div class="text-xs text-gray-500 uppercase tracking-wider mb-1">Rata-rata Skor Klaster
+                            </div>
+                            <div id="avgScore" class="text-xl text-white font-medium">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Raw Data -->
+                <div class="border border-gray-800 rounded-xl p-4 mt-4">
+                    <div class="text-xs text-gray-400 uppercase tracking-wider mb-3">Data Input Mentah</div>
+                    <pre id="rawData" class="text-xs text-gray-500 bg-black/50 p-3 rounded-lg overflow-x-auto"></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="mt-12 text-center">
+            <div class="inline-flex flex-col items-center space-y-2 text-xs text-gray-600">
+                <p>&copy; 2025 THREAT INTELLIGENCE. All Rights Reserved.</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>

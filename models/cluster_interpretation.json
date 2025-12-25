@@ -1,0 +1,16 @@
+{
+  "0": {
+    "risk_level": "HIGH",
+    "label": "High Risk Traffic",
+    "description": "High anomaly scores - potential attack or suspicious activity",
+    "color": "#ff4444",
+    "avg_anomaly_score": 74.84486633663366
+  },
+  "1": {
+    "risk_level": "LOW",
+    "label": "Normal Traffic",
+    "description": "Low anomaly scores - normal network traffic pattern",
+    "color": "#00ff88",
+    "avg_anomaly_score": 24.88245606060606
+  }
+}

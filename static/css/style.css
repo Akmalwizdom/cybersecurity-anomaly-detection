@@ -1,0 +1,193 @@
+* {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+body {
+    background: #050505;
+    min-height: 100vh;
+}
+
+/* Glowing border effect */
+.glow-border {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.glow-border:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+/* Input focus glow */
+.input-glow:focus {
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    outline: none;
+}
+
+/* Scanning animation */
+@keyframes scan {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(100vh);
+    }
+}
+
+.scan-line {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: scan 8s linear infinite;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* Pulse animation for status indicators */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Grid background */
+.grid-bg {
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+
+/* Risk level colors */
+.risk-high {
+    color: #ff4444;
+    text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+}
+
+.risk-medium {
+    color: #ffaa00;
+    text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+}
+
+.risk-low {
+    color: #00ff88;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.risk-bg-high {
+    background: rgba(255, 68, 68, 0.1);
+    border-color: rgba(255, 68, 68, 0.3);
+}
+
+.risk-bg-medium {
+    background: rgba(255, 170, 0, 0.1);
+    border-color: rgba(255, 170, 0, 0.3);
+}
+
+.risk-bg-low {
+    background: rgba(0, 255, 136, 0.1);
+    border-color: rgba(0, 255, 136, 0.3);
+}
+
+/* Status bar animation */
+@keyframes statusBar {
+    0% {
+        width: 0%;
+    }
+
+    100% {
+        width: var(--bar-width);
+    }
+}
+
+.status-bar {
+    animation: statusBar 1s ease-out forwards;
+}
+
+/* Loading animation */
+@keyframes loading {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-spinner {
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: loading 1s linear infinite;
+}
+
+/* Console log style */
+.console-text {
+    color: #00ff88;
+    font-size: 0.75rem;
+}
+
+/* Select dropdown styling */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+}
+
+/* Tooltip styling */
+.tool-tip {
+    position: relative;
+}
+
+.tool-tip::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 15, 15, 0.95);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 10px;
+    width: 200px;
+    text-align: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.2s ease;
+    z-index: 100;
+    pointer-events: none;
+    text-transform: none;
+    letter-spacing: normal;
+    line-height: 1.4;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.tool-tip:hover::after {
+    visibility: visible;
+    opacity: 1;
+    bottom: 140%;
+}

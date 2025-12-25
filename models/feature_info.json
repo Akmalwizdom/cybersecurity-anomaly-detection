@@ -1,0 +1,10 @@
+{
+  "features": [
+    "Anomaly Scores"
+  ],
+  "optimal_k": 2,
+  "silhouette_score": 0.6263834235731298,
+  "davies_bouldin_score": 0.500716070930617,
+  "model_type": "KMeans",
+  "scaler": "StandardScaler"
+}
